@@ -1,24 +1,24 @@
 import React, {useEffect, useRef} from 'react';
 import {fromEvent, Observable, ObservedValueOf} from 'rxjs'
 import {map, pairwise, startWith, switchMap, takeUntil, withLatestFrom} from 'rxjs/operators'
-import './app.module.css'
+import styles from './app.module.css'
 
 interface IOptions {
     lineWidth: string,
-    color: string
+    color: string,
 }
 
 interface ICanvasPoint {
     x: number,
     y: number,
-    options: IOptions
+    options: IOptions,
 }
 
 const App = () => {
-    const canvasRef = useRef(null);
-    const colorRef = useRef(null);
-    const rangeRef = useRef(null);
-    const clearRef = useRef(null);
+    const canvasRef = useRef<HTMLCanvasElement>(null);
+    const colorRef = useRef<HTMLInputElement>(null);
+    const rangeRef = useRef<HTMLInputElement>(null);
+    const clearRef = useRef<HTMLButtonElement>(null);
 
     useEffect(() => {
         const canvas: any = canvasRef.current;
@@ -70,7 +70,6 @@ const App = () => {
             )
 
         stream$.subscribe(([from, to]: [ICanvasPoint, ICanvasPoint]) => {
-            console.log([from, to])
             const { lineWidth, color } = from.options;
             ctx.lineWidth = lineWidth;
             ctx.strokeStyle = color;
@@ -78,10 +77,10 @@ const App = () => {
             ctx.moveTo(from.x, from.y);
             ctx.lineTo(to.x, to.y);
             ctx.stroke();
-        })
+        });
     }, []);
 
-    function createInputStream(node: any) {
+    const createInputStream = (node: any) => {
         return fromEvent(node, 'input')
             .pipe(
                 map((e: any) => e.target.value),
@@ -91,13 +90,13 @@ const App = () => {
 
     return (
         <div className="container">
-            <canvas id='canvas' ref={canvasRef}/>
-            <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
+            <canvas id="canvas" ref={canvasRef}/>
+            <div className={styles.flexBlock}>
                 <input ref={rangeRef} type="range" min={1} max={4} className="form-control-range" />
                 <br />
                 <input ref={colorRef} type="color"/>
                 <br />
-                <button ref={clearRef} className='btn btn-success'>Clear</button>
+                <button ref={clearRef} className="btn btn-success">Clear</button>
             </div>
         </div>
     );

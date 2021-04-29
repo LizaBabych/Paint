@@ -4,3 +4,9 @@ canvas {
     border: 2px solid #ccc;
     margin-top: 100px;
 }
+
+.flexBlock {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
